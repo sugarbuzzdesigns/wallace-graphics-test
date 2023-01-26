@@ -21,7 +21,6 @@ const ListJob = () => {
 
   return (
     <Fragment>
-      <div><input type={"text"} placeholder={"Search"}></input></div>
       <h1 className="text-center mt-5">Job List</h1>
       {" "}
       <table className="table mt-5 text-center">

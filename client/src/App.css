@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.titleText {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.searchBar {
+  margin: 1em;
+  width: 50%;
+}
