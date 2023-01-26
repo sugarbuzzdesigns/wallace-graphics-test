@@ -1,28 +1,44 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react"
 
 const ListJob = () => {
-  const [job, setJob] = useState({});
+  const [job, setJob] = useState({})
+  const [jobId, setJobId] = useState("")
 
-  const getJob = async () => {
+  const getJob = async (id) => {
     try {
-      const response = await fetch("http://localhost:5000/job/160876");
+      const response = await fetch(`http://localhost:5000/job/${id}`)
       const jsonData = await response.json();
 
-      setJob(jsonData);
+      setJob(jsonData)
+      console.log(job)
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message)
     }
-  };
+  }
 
-  useEffect(() => {
+/*   useEffect(() => {
     getJob();
-  }, []);
+  }, []); */
 
 
   return (
     <Fragment>
+      <div style={{ marginTop: "50px" }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            // get the job id from the input
+            const id = e.target.elements["jobId"].value
+            // send the id to the getJob fn which will make the API call
+            // and populate our data
+            getJob(id)
+          }}
+        >
+          <input name="jobId" type="text" placeholder="Search"></input>
+          <input type="submit" />
+        </form>
+      </div>
       <h1 className="text-center mt-5">Job List</h1>
-      {" "}
       <table className="table mt-5 text-center">
         <thead>
           <tr>
@@ -65,10 +81,8 @@ const ListJob = () => {
           </tr>
         </tbody>
       </table>
-    <button>EDIT</button> <br></br><br></br>
-    <button>DELETE</button>
     </Fragment>
-  );
-};
+  )
+}
 
-export default ListJob;
+export { ListJob }
