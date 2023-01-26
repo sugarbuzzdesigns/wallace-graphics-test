@@ -1,29 +1,72 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react"
 
 const ListJob = () => {
-  const [job, setJob] = useState({});
+  const [job, setJob] = useState({})
+  const [jobId, setJobId] = useState("")
 
-  const getJob = async () => {
+  const getJob = async (id) => {
     try {
-      const response = await fetch("http://localhost:5000/job/160876");
-      const jsonData = await response.json();
+      // using a mock api
+      const response = await fetch(
+        `https://63d1a769d5f0fa7fbdcef916.mockapi.io/job/${id}`
+      )
+      const jsonData = await response.json()
 
-      setJob(jsonData);
+      // only doing this because I'm using mocapi.io
+      // and the data shape doesn't doesn't match wallcegraphics data
+      const transformedData = {
+        "CSR EMAIL": "",
+        "CSR ID": jsonData.csrId,
+        "CSR NAME": jsonData.customerName,
+        "CUSTOMER ID": jsonData.customerId,
+        "CUSTOMER NAME": jsonData.customerName,
+        DESCRIPTION: jsonData.description,
+        "DESCRIPTION (CONT.)": jsonData.descriptionCont,
+        "FINAL H": 30,
+        "FINAL W": 20,
+        "JOB #": id,
+        "LEGAL NAME": jsonData.legalName,
+        "PROMISE DATE": "2024-01-31T05:00:00.000Z",
+        QUANTITY: 238,
+        "SALES EMAIL": null,
+        "SALES ID": 1,
+        "SALES NAME": "House",
+      }
+
+      setJob(transformedData)
+      console.log(job)
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message)
     }
-  };
+  }
 
-  useEffect(() => {
-    getJob();
-  }, []);
-
+  // we don't need this anymore since
+  // we are going to simply load a blank table first
+  // then make the API call on submit
+  // useEffect(() => {
+  //   getJob()
+  // }, [jobId])
 
   return (
     <Fragment>
-      <div><input type={"text"} placeholder={"Search"}></input></div>
+      {/* adding some very simple styling. 
+      We can use a CSS framework or an external style sheet later */}
+      <div style={{ marginTop: "50px" }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            // get the job id from the input
+            const id = e.target.elements["jobId"].value
+            // send the id to the getJob fn which will make the API call
+            // and populate our data
+            getJob(id)
+          }}
+        >
+          <input name="jobId" type="text" placeholder="Search"></input>
+          <input type="submit" />
+        </form>
+      </div>
       <h1 className="text-center mt-5">Job List</h1>
-      {" "}
       <table className="table mt-5 text-center">
         <thead>
           <tr>
@@ -66,10 +109,8 @@ const ListJob = () => {
           </tr>
         </tbody>
       </table>
-    <button>EDIT</button> <br></br><br></br>
-    <button>DELETE</button>
     </Fragment>
-  );
-};
+  )
+}
 
-export default ListJob;
+export { ListJob }
